@@ -21,13 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(1234),
       notNull: true,
       required: true
+    },
+    localizacion: {
+      type: DataTypes.GEOMETRY('POINT'),
+      defaultValue: {
+        type: 'Point',
+        coordinates: [12.16384, -86.34745]
+      }
     }
-    // localizacion: {
-    //   type: DataTypes.GEOMETRY('POINT', 4326),
-    //   default: {
-    //     type: 'Point',
-    //     coordinates: [12.16384, -86.34745]
-    //   }
-    // }
   });
 };

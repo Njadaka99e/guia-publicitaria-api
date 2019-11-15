@@ -14,7 +14,7 @@ exports.postNegocio = async (req, res, next) => {
       nombre: req.body.nombre,
       descripcion: req.body.descripcion,
       direccion: req.body.direccion,
-      // localizacion: req.body.localizacion,
+      localizacion: req.body.localizacion,
       updatedAt: Date.now()
     }
   });

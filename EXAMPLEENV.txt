@@ -1,0 +1,11 @@
+# El # es un comentario, si hay una cadena que necesita el #
+# escribirla entre comillas dobles ""
+
+# para que funcione correctamente el archivo se debe llamar
+# .env
+DBUSERNAME=usuario
+DBPASSWORD="a#1"
+DBDATABASE=hr
+DBHOST=localhost
+NODE_ENV=dev
+PORT=3000
