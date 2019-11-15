@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define('Telefono', {
     id: {
       type: DataTypes.UUID,
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
     },
     telefono: {
       type: DataTypes.STRING,

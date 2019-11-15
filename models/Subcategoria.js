@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define('Subcategoria', {
     id: {
       type: DataTypes.UUID,
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
     },
     nombre: {
       type: DataTypes.STRING,

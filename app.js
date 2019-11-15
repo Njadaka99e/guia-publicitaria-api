@@ -10,6 +10,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// routes
+const negocio = require('./routes/negocio');
+app.use('/api/v1/negocio', negocio);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

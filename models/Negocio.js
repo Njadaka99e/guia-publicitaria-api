@@ -1,9 +1,11 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('Negocio', {
     id: {
       type: DataTypes.UUID,
-      primaryKey: true
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
     },
     nombre: {
       type: DataTypes.STRING,
@@ -21,7 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       required: true
     },
     localizacion: {
-      type: DataTypes.GEOMETRY('POINT', 4326)
+      type: DataTypes.GEOMETRY('POINT'),
+      defaultValue: {
+        type: 'Point',
+        coordinates: [12.16384, -86.34745]
+      }
     }
   });
 };
