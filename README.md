@@ -1,4 +1,4 @@
-# Instalar
+# Guia publicitaria api
 
 ## Dependencias
 
@@ -8,7 +8,7 @@
 
 [Node](https://nodejs.org/en/)
 
-## Programa
+## Instalar
 
 Clonar repo
 
@@ -21,4 +21,8 @@ Ejecutar `CREATE EXTENSION postgis;` en la base de datos
 `npm install`
 
 `npm start`
+
+## Documentación
+
+[Postman](https://documenter.getpostman.com/view/8636885/SW7XYUUF?version=latest)
 
