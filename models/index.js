@@ -7,8 +7,6 @@ const basename = path.basename(__filename);
 const config = require('../config/config');
 const db = {};
 
-console.log(config);
-
 const sequelize = new Sequelize(
   config.db.database,
   config.db.username,
@@ -52,9 +50,6 @@ db.Subcategoria.belongsToMany(db.Negocio, {
   through: db.NegocioSubcategoria,
   foreignKey: 'idSubcategoria'
 });
-//Negocio
-db.Negocio.hasMany(db.Telefono, { foreignKey: 'idNegocio' });
-db.Negocio.hasMany(db.NegocioImagen, { foreignKey: 'idNegocio' });
 // Categoria
 db.Categoria.hasMany(db.Subcategoria, { foreignKey: 'idCategoria' });
 

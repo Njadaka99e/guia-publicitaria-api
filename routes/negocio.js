@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const { getNegocios, postNegocio } = require('../controllers/negocio');
+const {
+  getNegocios,
+  postNegocio,
+  putNegocio,
+  getNegocio,
+  deleteNegocio
+} = require('../controllers/negocio');
 
 router
   .route('/')
@@ -10,8 +16,8 @@ router
 
 router
   .route('/:id')
-  .get()
-  .put()
-  .delete();
+  .get(getNegocio)
+  .put(putNegocio)
+  .delete(deleteNegocio);
 
 module.exports = router;

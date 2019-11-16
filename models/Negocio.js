@@ -9,18 +9,25 @@ module.exports = (sequelize, DataTypes) => {
     },
     nombre: {
       type: DataTypes.STRING,
-      notNull: true,
-      required: true
+      allowNull: false,
+      required: true,
+      unique: true
     },
     descripcion: {
       type: DataTypes.STRING(1234),
-      notNull: true,
+      allowNull: false,
       required: true
     },
     direccion: {
       type: DataTypes.STRING(1234),
-      notNull: true,
+      allowNull: false,
       required: true
+    },
+    telefonos: {
+      type: DataTypes.ARRAY(DataTypes.TEXT)
+    },
+    imagenes: {
+      type: DataTypes.ARRAY(DataTypes.TEXT)
     },
     localizacion: {
       type: DataTypes.GEOMETRY('POINT'),

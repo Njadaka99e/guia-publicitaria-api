@@ -1,19 +1,34 @@
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const chalk = require('chalk');
+const morgan = require('morgan');
+const errorHandler = require('./middlewares/error');
 
 const app = express();
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-// routes
+// Mount routers
 const negocio = require('./routes/negocio');
+
+app.use(
+    morgan((tokens, req, res) => {
+      return (
+          chalk.yellow.bold('Morgan ->') +
+          ' ' +
+          chalk.blue(tokens.method(req, res)) +
+          ' ' +
+          chalk.green(tokens.url(req, res)) +
+          ' ' +
+          chalk.red(tokens['response-time'](req, res))
+      );
+    })
+);
 app.use('/api/v1/negocio', negocio);
 
+app.use(errorHandler);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
