@@ -20,15 +20,9 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(404, message);
   }
 
-  // Sequelize Negocio nombre unique
+  // Sequelize nombre del Negocio debe ser unique
   if (err.name === 'SequelizeUniqueConstraintError') {
     const message = 'El nombre del negocio ya existe';
-    error = new ErrorResponse(404, message);
-  }
-
-  // Mongoose duplicate key
-  if (err.code === 11000) {
-    const message = 'Duplicate field value entered';
     error = new ErrorResponse(404, message);
   }
 

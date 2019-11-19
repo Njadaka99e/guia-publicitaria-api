@@ -22,7 +22,8 @@ exports.postNegocio = asyncHandler(async (req, res, next) => {
       updatedAt: Date.now()
     }
   });
-  res.status(200).json({ success: created, data: negocio });
+  if (!created) return next(new ErrorResponse(404, 'El negocio ya existe'));
+  res.status(200).json({ success: created});
 });
 
 exports.getNegocio = asyncHandler(async (req, res, next) => {
@@ -32,17 +33,22 @@ exports.getNegocio = asyncHandler(async (req, res, next) => {
 });
 
 exports.putNegocio = asyncHandler(async (req, res, next) => {
+  const negocio = await db.Negocio.findOne({
+    where: { nombre: req.body.nombre }
+  });
+  console.log(negocio);
+  if (negocio !== null)
+    return next(new ErrorResponse(404, 'Ya existe un negocio con este nombre'));
   const [editado] = await db.Negocio.update(req.body, {
     where: { id: req.params.id }
   });
-  // TODO: validar si el nuevo nombre ya existe antes del update
   if (editado) res.status(200).json({ success: true });
   next(err);
 });
 
 exports.deleteNegocio = asyncHandler(async (req, res, next) => {
   const eliminado = await db.Negocio.destroy({ where: { id: req.params.id } });
-  console.log(eliminado)
+  console.log(eliminado);
   if (eliminado) res.status(200).json({ success: true });
   next(err);
 });

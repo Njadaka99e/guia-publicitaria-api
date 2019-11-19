@@ -7,7 +7,7 @@ const {
   putNegocio,
   getNegocio,
   deleteNegocio
-} = require('../controllers/negocio');
+} = require('../controllers/negocioController');
 
 router
   .route('/')
