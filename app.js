@@ -4,14 +4,16 @@ const cookieParser = require('cookie-parser');
 const chalk = require('chalk');
 const morgan = require('morgan');
 const errorHandler = require('./middlewares/error');
+const fileUpload = require('express-fileupload');
+const path = require('path')
+// routers
+const negocio = require('./routes/negocio');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// Mount routers
-const negocio = require('./routes/negocio');
 
 app.use(
     morgan((tokens, req, res) => {
@@ -26,6 +28,11 @@ app.use(
       );
     })
 );
+// Subir archivos
+app.use(fileUpload());
+// Folder estatico
+app.use(express.static(path.join(__dirname, 'public')));
+// routers
 app.use('/api/v1/negocio', negocio);
 
 app.use(errorHandler);

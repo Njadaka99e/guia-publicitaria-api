@@ -6,7 +6,8 @@ const {
   postNegocio,
   putNegocio,
   getNegocio,
-  deleteNegocio
+  deleteNegocio,
+  putSubirImagen
 } = require('../controllers/negocioController');
 
 router
@@ -20,4 +21,8 @@ router
   .put(putNegocio)
   .delete(deleteNegocio);
 
+router
+  .route('/:id/foto')
+  .put(putSubirImagen);
+  
 module.exports = router;
