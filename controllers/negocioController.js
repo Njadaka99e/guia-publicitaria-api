@@ -74,44 +74,49 @@ exports.deleteNegocio = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.putSubirImagen = asyncHandler(async (req, res, next) => {
   const negocio = await db.Negocio.findByPk(req.params.id);
-  if (negocio) res.status(200).json({ success: true, data: negocio });
+  // if (negocio) res.status(200).json({ success: true, data: negocio });
   // Validar de que haya imagenes en la variable 'fotos'
-  // if (!req.files) {
-  //   return next(new ErrorResponse(400, 'Porfavor suba un archivo'));
-  // }
-  // let fotos = req.files.fotos;
-  // // Validaciones antes de subir imagen
-  // fotos.forEach(foto => {
-  //   // Validar que la imagen es  una foto
-  //   if (!foto.mimetype.startsWith('image')) {
-  //     return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
-  //   }
-  //   // Validar que la imagen no sobrepase el limite de tamaño
-  //   if (foto.size > process.env.MAX_FILE_UPLOAD) {
-  //     return next(
-  //       new ErrorResponse(
-  //         400,
-  //         `Porfavor suba una imagen menor que ${process.env.MAX_FILE_UPLOAD}`
-  //       )
-  //     );
-  //   }
-  // });
-  // // Subir las imagenes
-  // let data = [];
-  // fotos.forEach(foto => {
-  //   foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
-  //   console.log(foto.name)
-  //   foto.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, err => {
-  //     if (err){
-  //       console.log(err);
-  //       return next(new ErrorResponse(500, 'Error al subir archivos'));
-  //     }
-  //     data.push(foto.name)
-  //   });
-  //   data.push(foto.name)
-  // });
-  // console.log(data)
-  // const [subido] = await negocio.update({imagenes: data})
-  // if (editado) res.status(200).json({ success: true, data: data });
+  if (!req.files) {
+    return next(new ErrorResponse(400, 'Porfavor suba un archivo'));
+  }
+  let fotos = req.files.fotos;
+  // Validaciones antes de subir imagen
+  fotos.forEach(foto => {
+    // Validar que la imagen es  una foto
+    if (!foto.mimetype.startsWith('image')) {
+      return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
+    }
+    // Validar que la imagen no sobrepase el limite de tamaño
+    if (foto.size > process.env.MAX_FILE_UPLOAD) {
+      return next(
+        new ErrorResponse(
+          400,
+          `Porfavor suba una imagen menor que ${process.env.MAX_FILE_UPLOAD}`
+        )
+      );
+    }
+  });
+  // Subir las imagenes
+  let data = [];
+  fotos.forEach(foto => {
+    foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
+    console.log(foto.name);
+    foto.mv(`${process.env.FILE_UPLOAD_PATH}/${foto.name}`, err => {
+      if (err){
+        console.log(err);
+        return next(new ErrorResponse(500, 'Error al subir archivos'));
+      }
+    });
+    data.push(foto.name);
+  });
+  console.log(data);
+  const [editado] = await db.Negocio.update(
+    { imagenes: data },
+    {
+      where: { id: req.params.id }
+    }
+  );
+  console.log(editado);
+  if (editado) res.status(200).json({ success: true, data });
   next(err);
 });
