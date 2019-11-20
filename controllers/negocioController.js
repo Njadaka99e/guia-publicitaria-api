@@ -2,6 +2,9 @@ const db = require('../models');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 
+// @desc      Obtener todos los negocios
+// @route     GET /api/v1/negocio
+// @access    Public
 exports.getNegocios = asyncHandler(async (req, res, next) => {
   const negocios = await db.Negocio.findAndCountAll();
   res
@@ -9,6 +12,9 @@ exports.getNegocios = asyncHandler(async (req, res, next) => {
     .json({ success: true, count: negocios.count, data: negocios.rows });
 });
 
+// @desc      Crear negocio
+// @route     POST /api/v1/negocio
+// @access    Private
 exports.postNegocio = asyncHandler(async (req, res, next) => {
   const [negocio, created] = await db.Negocio.findOrCreate({
     where: { nombre: req.body.nombre },
@@ -26,12 +32,18 @@ exports.postNegocio = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: created});
 });
 
+// @desc      Obtener un solo negocio
+// @route     GET /api/v1/negocio/:id
+// @access    Public
 exports.getNegocio = asyncHandler(async (req, res, next) => {
   const negocio = await db.Negocio.findByPk(req.params.id);
   if (negocio) res.status(200).json({ success: true, data: negocio });
   next(err);
 });
 
+// @desc      Actualizar negocio
+// @route     PUT /api/v1/negocio/:id
+// @access    Private
 exports.putNegocio = asyncHandler(async (req, res, next) => {
   const negocio = await db.Negocio.findOne({
     where: { nombre: req.body.nombre }
@@ -46,6 +58,9 @@ exports.putNegocio = asyncHandler(async (req, res, next) => {
   next(err);
 });
 
+// @desc      Eliminar negocio
+// @route     DELETE /api/v1/negocio/:id
+// @access    Private
 exports.deleteNegocio = asyncHandler(async (req, res, next) => {
   const eliminado = await db.Negocio.destroy({ where: { id: req.params.id } });
   console.log(eliminado);
