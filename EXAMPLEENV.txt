@@ -9,3 +9,6 @@ DBDATABASE=hr
 DBHOST=localhost
 NODE_ENV=dev
 PORT=3000
+
+FILE_UPLOAD_PATH= ./public/uploads # La carpeta en la cual se guardaran las imagenes
+MAX_FILE_UPLOAD=4000000 # El tamaño maximo de las fotos en kb

@@ -2,6 +2,7 @@ const db = require('../models');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const path = require('path');
+const _ = require('lodash');
 
 // @desc      Obtener todos los negocios
 // @route     GET /api/v1/negocio
@@ -74,15 +75,21 @@ exports.deleteNegocio = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.putSubirImagen = asyncHandler(async (req, res, next) => {
   const negocio = await db.Negocio.findByPk(req.params.id);
-  // if (negocio) res.status(200).json({ success: true, data: negocio });
+  let data = negocio.imagenes;
   // Validar de que haya imagenes en la variable 'fotos'
   if (!req.files) {
     return next(new ErrorResponse(400, 'Porfavor suba un archivo'));
   }
-  let fotos = req.files.fotos;
-  // Validaciones antes de subir imagen
-  fotos.forEach(foto => {
-    // Validar que la imagen es  una foto
+
+  // Validar si se subio solamente un arhcivo
+  let isSingleFile = false;
+  _.forEach(_.keysIn(req.files.fotos), key => {
+    if (key === 'name') isSingleFile = true;
+  });
+
+  // Si se subio solo un archivo
+  if (isSingleFile) {
+    let foto = req.files.fotos;
     if (!foto.mimetype.startsWith('image')) {
       return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
     }
@@ -95,12 +102,7 @@ exports.putSubirImagen = asyncHandler(async (req, res, next) => {
         )
       );
     }
-  });
-  // Subir las imagenes
-  let data = [];
-  fotos.forEach(foto => {
     foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
-    console.log(foto.name);
     foto.mv(`${process.env.FILE_UPLOAD_PATH}/${foto.name}`, err => {
       if (err){
         console.log(err);
@@ -108,15 +110,45 @@ exports.putSubirImagen = asyncHandler(async (req, res, next) => {
       }
     });
     data.push(foto.name);
-  });
-  console.log(data);
+  } // Si se subio mas de un archivo 
+  else {
+    _.forEach(_.keysIn(req.files.fotos), (key) => {
+      let foto = req.files.fotos[key];
+      if (!foto.mimetype.startsWith('image')) {
+        return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
+      }
+      // Validar que la imagen no sobrepase el limite de tamaño
+      if (foto.size > process.env.MAX_FILE_UPLOAD) {
+        return next(
+          new ErrorResponse(
+            400,
+            `Porfavor suba una imagen menor que ${process.env.MAX_FILE_UPLOAD}`
+          )
+        );
+      }
+    });
+  
+    // Subir las imagenes a uploads
+    _.forEach(_.keysIn(req.files.fotos), (key) => {
+      let foto = req.files.fotos[key];
+      foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
+      foto.mv(`${process.env.FILE_UPLOAD_PATH}/${foto.name}`, err => {
+        if (err){
+          console.log(err);
+          return next(new ErrorResponse(500, 'Error al subir archivos'));
+        }
+      });
+      data.push(foto.name);
+    });
+  }
+
+  // Actualizar la base de datos con las nuevas imagenes
   const [editado] = await db.Negocio.update(
     { imagenes: data },
     {
       where: { id: req.params.id }
     }
   );
-  console.log(editado);
   if (editado) res.status(200).json({ success: true, data });
   next(err);
 });
