@@ -24,17 +24,14 @@ module.exports = (sequelize, DataTypes) => {
       required: true
     },
     telefonos: {
-      type: DataTypes.ARRAY(DataTypes.TEXT)
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     imagenes: {
-      type: DataTypes.ARRAY(DataTypes.TEXT)
+      type: DataTypes.ARRAY(DataTypes.STRING)
     },
     localizacion: {
-      type: DataTypes.GEOMETRY('POINT'),
-      defaultValue: {
-        type: 'Point',
-        coordinates: [12.16384, -86.34745]
-      }
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      defaultValue: [12.16384, -86.34745]
     }
   });
 };
