@@ -11,7 +11,7 @@ exports.getNegocios = asyncHandler(async (req, res, next) => {
   const negocios = await db.Negocio.findAndCountAll();
   res
     .status(200)
-    .json({ success: true, count: negocios.count, data: negocios.rows });
+    .json(negocios.rows );
 });
 
 // @desc      Crear negocio
