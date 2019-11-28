@@ -5,10 +5,11 @@ const chalk = require('chalk');
 const morgan = require('morgan');
 const errorHandler = require('./middlewares/error');
 const fileUpload = require('express-fileupload');
-const path = require('path')
+const path = require('path');
 // routers
 const negocio = require('./routes/negocio');
-const categoria = require('./routes/categoria')
+const categoria = require('./routes/categoria');
+const subcategoria = require('./routes/subcategoria');
 const app = express();
 
 app.use(express.json());
@@ -16,17 +17,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(
-    morgan((tokens, req, res) => {
-      return (
-          chalk.yellow.bold('Morgan ->') +
-          ' ' +
-          chalk.blue(tokens.method(req, res)) +
-          ' ' +
-          chalk.green(tokens.url(req, res)) +
-          ' ' +
-          chalk.red(tokens['response-time'](req, res))
-      );
-    })
+  morgan((tokens, req, res) => {
+    return (
+      chalk.yellow.bold('Morgan ->') +
+      ' ' +
+      chalk.blue(tokens.method(req, res)) +
+      ' ' +
+      chalk.green(tokens.url(req, res)) +
+      ' ' +
+      chalk.red(tokens['response-time'](req, res))
+    );
+  })
 );
 // Subir archivos
 app.use(fileUpload());
@@ -34,7 +35,8 @@ app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/api/v1/negocio', negocio);
-app.use('/api/v1/categoria', categoria)
+app.use('/api/v1/categoria', categoria);
+app.use('/api/v1/subcategoria', subcategoria);
 
 app.use(errorHandler);
 // catch 404 and forward to error handler
