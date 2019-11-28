@@ -8,10 +8,11 @@ const _ = require('lodash');
 // @route     GET /api/v1/negocio
 // @access    Public
 exports.getNegocios = asyncHandler(async (req, res, next) => {
-  const negocios = await db.Negocio.findAndCountAll();
+  const negocios = await db.Negocio.findAll();
   res
     .status(200)
-    .json(negocios.rows );
+    .json(negocios );
+  next(err)
 });
 
 // @desc      Crear negocio
@@ -32,6 +33,7 @@ exports.postNegocio = asyncHandler(async (req, res, next) => {
   });
   if (!created) return next(new ErrorResponse(404, 'El negocio ya existe'));
   res.status(200).json({ success: created });
+  next(err)
 });
 
 // @desc      Obtener un solo negocio
@@ -50,7 +52,6 @@ exports.putNegocio = asyncHandler(async (req, res, next) => {
   const negocio = await db.Negocio.findOne({
     where: { nombre: req.body.nombre }
   });
-  console.log(negocio);
   if (negocio !== null)
     return next(new ErrorResponse(404, 'Ya existe un negocio con este nombre'));
   const [editado] = await db.Negocio.update(req.body, {
@@ -65,7 +66,6 @@ exports.putNegocio = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.deleteNegocio = asyncHandler(async (req, res, next) => {
   const eliminado = await db.Negocio.destroy({ where: { id: req.params.id } });
-  console.log(eliminado);
   if (eliminado) res.status(200).json({ success: true });
   next(err);
 });

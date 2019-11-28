@@ -8,7 +8,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path')
 // routers
 const negocio = require('./routes/negocio');
-
+const categoria = require('./routes/categoria')
 const app = express();
 
 app.use(express.json());
@@ -34,6 +34,7 @@ app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/api/v1/negocio', negocio);
+app.use('/api/v1/categoria', categoria)
 
 app.use(errorHandler);
 // catch 404 and forward to error handler
