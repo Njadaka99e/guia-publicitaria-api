@@ -1,5 +1,6 @@
 # El # es un comentario, si hay una cadena que necesita el #
 # escribirla entre comillas dobles ""
+# no se puede tener un comentario en la misma linea que la variable OJO
 
 # para que funcione correctamente el archivo se debe llamar
 # .env
@@ -10,5 +11,7 @@ DBHOST=localhost
 NODE_ENV=dev
 PORT=3000
 
-FILE_UPLOAD_PATH= ./public/uploads # La carpeta en la cual se guardaran las imagenes
-MAX_FILE_UPLOAD=4000000 # El tamaño maximo de las fotos en kb
+# La carpeta en la cual se guardaran las imagenes
+FILE_UPLOAD_PATH= ./public/uploads
+# El tamaño maximo de las fotos en kb
+MAX_FILE_UPLOAD=4000000
