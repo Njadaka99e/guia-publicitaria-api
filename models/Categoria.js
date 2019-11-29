@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         notNull: true,
         required: true
+      },
+      imagenes: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
       }
     },
     {

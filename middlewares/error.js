@@ -15,10 +15,10 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Sequelize no existe el registro
-  if (err.name === 'ReferenceError') {
-    const message = `El recurso no existe`;
-    error = new ErrorResponse(404, message);
-  }
+  // if (err.name === 'ReferenceError') {
+  //   const message = `El recurso no existe`;
+  //   error = new ErrorResponse(404, message);
+  // }
 
   // Sequelize nombre del Negocio debe ser unique
   if (err.name === 'SequelizeUniqueConstraintError') {

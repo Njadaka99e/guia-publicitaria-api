@@ -11,7 +11,10 @@ DBHOST=localhost
 NODE_ENV=dev
 PORT=3000
 
-# La carpeta en la cual se guardaran las imagenes
-FILE_UPLOAD_PATH= ./public/uploads
+# La carpeta en la cual se guardaran las imagenes dependiendo de la funcion
+FILE_UPLOAD_PATH_NEGOCIO= public/uploads/negocio
+FILE_UPLOAD_PATH_CATEGORIA= public/uploads/categoria
+FILE_UPLOAD_PATH_SUBCATEGORIA= public/uploads/subcategoria
+
 # El tamaño maximo de las fotos en kb
 MAX_FILE_UPLOAD=4000000

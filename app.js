@@ -32,7 +32,7 @@ app.use(
 // Subir archivos
 app.use(fileUpload());
 // Folder estatico
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 // routers
 app.use('/api/v1/negocio', negocio);
 app.use('/api/v1/categoria', categoria);

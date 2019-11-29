@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     idCategoria: {
       // fk Categoria
       type: DataTypes.UUID
+    },
+    imagenes: {
+      type: DataTypes.ARRAY(DataTypes.STRING)
     }
   });
 };

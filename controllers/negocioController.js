@@ -19,6 +19,78 @@ exports.getNegocios = asyncHandler(async (req, res, next) => {
 // @route     POST /api/v1/negocio
 // @access    Private
 exports.postNegocio = asyncHandler(async (req, res, next) => {
+  const validarNombre = await db.Negocio.findOne({
+    where: { nombre: req.body.nombre }
+  });
+  if (validarNombre !== null)
+    return next(new ErrorResponse(404, 'Ya existe un negocio con este nombre'));
+  let data = [];
+  console.log(req.files)
+  // Validar de que haya imagenes en la variable 'fotos'
+  if (!req.files) {
+    return next(new ErrorResponse(400, 'Porfavor suba un archivo'));
+  }
+  // Validar si se subio solamente un arhcivo
+  let isSingleFile = false;
+  _.forEach(_.keysIn(req.files.fotos), key => {
+    if (key === 'name') isSingleFile = true;
+  });
+
+  // Si se subio solo un archivo
+  if (isSingleFile) {
+    let foto = req.files.fotos;
+    if (!foto.mimetype.startsWith('image')) {
+      return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
+    }
+    // Validar que la imagen no sobrepase el limite de tamaño
+    if (foto.size > process.env.MAX_FILE_UPLOAD) {
+      return next(
+          new ErrorResponse(
+              400,
+              `Porfavor suba una imagen menor que ${process.env.MAX_FILE_UPLOAD}`
+          )
+      );
+    }
+    foto.name = `foto_${Date.now()}_${foto.name}`;
+    foto.mv(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`, err => {
+      if (err){
+        console.log(err);
+        return next(new ErrorResponse(500, 'Error al subir archivos'));
+      }
+    });
+    data.push(foto.name);
+  } // Si se subio mas de un archivo
+  else {
+    _.forEach(_.keysIn(req.files.fotos), (key) => {
+      let foto = req.files.fotos[key];
+      if (!foto.mimetype.startsWith('image')) {
+        return next(new ErrorResponse(400, 'Porfavor suba una imagen'));
+      }
+      // Validar que la imagen no sobrepase el limite de tamaño
+      if (foto.size > process.env.MAX_FILE_UPLOAD) {
+        return next(
+            new ErrorResponse(
+                400,
+                `Porfavor suba una imagen menor que ${process.env.MAX_FILE_UPLOAD}`
+            )
+        );
+      }
+    });
+
+    // Subir las imagenes a uploads
+    _.forEach(_.keysIn(req.files.fotos), (key) => {
+      let foto = req.files.fotos[key];
+      foto.name = `foto_${Date.now()}_${foto.name}`;
+      foto.mv(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`, err => {
+        if (err){
+          console.log(err);
+          return next(new ErrorResponse(500, 'Error al subir archivos'));
+        }
+      });
+      data.push(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`);
+    });
+  }
+  console.log(data)
   const [negocio, created] = await db.Negocio.findOrCreate({
     where: { nombre: req.body.nombre },
     defaults: {
@@ -26,7 +98,7 @@ exports.postNegocio = asyncHandler(async (req, res, next) => {
       descripcion: req.body.descripcion,
       direccion: req.body.direccion,
       telefonos: req.body.telefonos,
-      imagenes: req.body.imagenes,
+      imagenes: data,
       localizacion: req.body.localizacion,
       updatedAt: Date.now()
     }
@@ -80,7 +152,7 @@ exports.putSubirImagen = asyncHandler(async (req, res, next) => {
   if (!req.files) {
     return next(new ErrorResponse(400, 'Porfavor suba un archivo'));
   }
-
+  console.log(req.files)
   // Validar si se subio solamente un arhcivo
   let isSingleFile = false;
   _.forEach(_.keysIn(req.files.fotos), key => {
@@ -103,7 +175,7 @@ exports.putSubirImagen = asyncHandler(async (req, res, next) => {
       );
     }
     foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
-    foto.mv(`${process.env.FILE_UPLOAD_PATH}/${foto.name}`, err => {
+    foto.mv(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`, err => {
       if (err){
         console.log(err);
         return next(new ErrorResponse(500, 'Error al subir archivos'));
@@ -127,18 +199,18 @@ exports.putSubirImagen = asyncHandler(async (req, res, next) => {
         );
       }
     });
-  
+
     // Subir las imagenes a uploads
     _.forEach(_.keysIn(req.files.fotos), (key) => {
       let foto = req.files.fotos[key];
       foto.name = `foto_${negocio.id}_${Date.now()}_${foto.name}`;
-      foto.mv(`${process.env.FILE_UPLOAD_PATH}/${foto.name}`, err => {
+      foto.mv(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`, err => {
         if (err){
           console.log(err);
           return next(new ErrorResponse(500, 'Error al subir archivos'));
         }
       });
-      data.push(foto.name);
+      data.push(`${process.env.FILE_UPLOAD_PATH_NEGOCIO}/${foto.name}`);
     });
   }
 
